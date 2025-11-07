@@ -74,7 +74,7 @@ fn group_expr_to_bitmap_index(group_expr: &[Expr]) -> Result<HashMap<&Expr, usiz
 
 fn replace_grouping_exprs(
     input: Arc<LogicalPlan>,
-    schema: DFSchemaRef,
+    schema: &DFSchemaRef,
     group_expr: Vec<Expr>,
     aggr_expr: Vec<Expr>,
 ) -> Result<LogicalPlan> {
@@ -139,7 +139,8 @@ fn analyze_internal(plan: LogicalPlan) -> Result<Transformed<LogicalPlan>> {
             schema,
             ..
         }) if contains_grouping_function(&aggr_expr) => Ok(Transformed::yes(
-            replace_grouping_exprs(input, schema, group_expr, aggr_expr)?,
+            //todo fox
+            replace_grouping_exprs(input, &schema, group_expr, aggr_expr)?,
         )),
         _ => Ok(Transformed::no(plan)),
     })?;
