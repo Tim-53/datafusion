@@ -141,10 +141,16 @@ impl Default for PercentileCont {
 impl PercentileCont {
     pub fn new() -> Self {
         let mut variants = Vec::with_capacity(NUMERICS.len());
-        // Accept any numeric value paired with a float64 percentile
+
+        let list_f64 =
+            DataType::List(Arc::new(Field::new("item", DataType::Float64, true)));
+
         for num in NUMERICS {
+            // Accept any numeric value paired with a float64 percentile
             variants.push(TypeSignature::Exact(vec![num.clone(), DataType::Float64]));
+            variants.push(TypeSignature::Exact(vec![num.clone(), list_f64.clone()]));
         }
+
         Self {
             signature: Signature::one_of(variants, Volatility::Immutable)
                 .with_parameter_names(vec!["expr".to_string(), "percentile".to_string()])
@@ -155,6 +161,8 @@ impl PercentileCont {
 
     fn create_accumulator(&self, args: AccumulatorArgs) -> Result<Box<dyn Accumulator>> {
         let percentile = validate_percentile_expr(&args.exprs[1], "PERCENTILE_CONT")?;
+
+        println!("validated scalar_value: {:?}", percentile);
 
         let is_descending = args
             .order_bys

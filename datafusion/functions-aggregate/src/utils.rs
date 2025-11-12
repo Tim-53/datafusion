@@ -51,12 +51,15 @@ pub(crate) fn validate_percentile_expr(
         ))
     })?;
 
+    println!("scalar_value: {:?}", scalar_value);
+
     let percentile = match scalar_value {
         ScalarValue::Float32(Some(value)) => value as f64,
         ScalarValue::Float64(Some(value)) => value,
+        ScalarValue::List(val) => 1.0, 
         sv => {
             return plan_err!(
-                "Percentile value for '{fn_name}' must be Float32 or Float64 literal (got data type {})",
+                "Percentile value for '{fn_name}' must be Float32 or Float64 literal diese (got data type {})",
                 sv.data_type()
             )
         }

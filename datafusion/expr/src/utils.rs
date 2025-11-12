@@ -943,7 +943,7 @@ pub fn generate_signature_error_msg(
         .join("\n");
 
     format!(
-            "No function matches the given name and argument types '{}({})'. You might need to add explicit type casts.\n\tCandidate functions:\n{}",
+            "No function matches the given name and argument types '{}({})'. You might need to add explicit type hier casts.\n\tCandidate functions:\n{}",
             func_name, TypeSignature::join_types(input_expr_types, ", "), candidate_signatures
         )
 }
